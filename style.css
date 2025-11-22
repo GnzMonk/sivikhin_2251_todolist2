@@ -1,0 +1,52 @@
+* {
+    margin: 0;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.creating-zone {
+    margin-left: auto;
+    margin-right: auto;
+    background-color: rgb(169, 169, 169);
+    width: 44%;
+    height: 140px;
+    margin-top: 25px;
+    border-radius: 50px;
+}
+
+.tasks-zone {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    width: 100%;
+}
+
+
+.col {
+    height: 500px;
+    width: 30%;
+    margin: 25px 0;
+    background-color: rgb(169, 169, 169);
+    border-radius: 50px;
+}
+
+.col-head {
+    width: 100%;
+    height: 100px;
+    border-top-left-radius: 50px;
+    border-top-right-radius: 50px;
+}
+
+.notdone {
+    background-color: rgb(143, 30, 30);
+}
+.inprogress {
+    background-color: rgb(220, 159, 52);
+}
+.done {
+    background-color: rgb(28, 197, 25);
+}
