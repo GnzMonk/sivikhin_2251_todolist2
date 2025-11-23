@@ -8,10 +8,34 @@
 </head>
 <body>
     <div class="content">
-        <div class=creating-zone></div>
+        <div class=creating-zone>
+            <div class="left-creating">
+                <div class="top-creating">
+                    <input type="text" class="task-title" placeholder="Купить пельменей..." required>
+                </div>
+                <div class="bot-creating">
+                    <select class="categ">
+                        <option value="Other">Other</option>
+                        <option value="Home">Home</option>
+                        <option value="Study">Study</option>
+                        <option value="Work">Work</option>
+                    </select>
+
+                    <select class="prior">
+                        <option value="Low">Low</option>
+                        <option value="Medium">Medium</option>
+                        <option value="High">High</option>
+                    </select>
+                </div>
+            </div>
+            <div class="right-creating">
+                <button class="add-button">+</button>
+            </div>
+        </div>
         <div class=tasks-zone>
             <div class="col">
                 <div class="col-head notdone"></div>
+                <div class="task"></div>
             </div>
             <div class="col">
                 <div class="col-head inprogress"></div>
