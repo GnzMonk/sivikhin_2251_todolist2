@@ -6,6 +6,13 @@ const notdone_list = document.querySelector(".notdone-list")
 const inprogress_list = document.querySelector(".inprogress-list")
 const done_list = document.querySelector(".done-list")
 
+// фильтры
+const all_filter = document.querySelector(".all")
+const work_fiter = document.querySelector(".work")
+const home_filter = document.querySelector(".home")
+const study_filter = document.querySelector(".study")
+const other_filter = document.querySelector(".other")
+
 // Что-то в духе Enum`а
 const Stage = { NotDone: "notdone", InProgress: "inprogress", Done: "done" }
 const Category = { home: "home", study: "study", work: "work", other: "other" }
@@ -17,10 +24,16 @@ let draggedTaskIndex = null
 let draggedTaskElement = null
 let editingTask = null
 
-//!localStorage.tasks ? tasks = [] : tasks = JSON.parse(localStorage.getItem('tasks'))
+let currentFilter = "all"
+
+!localStorage.tasks ? tasks = [] : tasks = JSON.parse(localStorage.getItem('tasks'))
 
 const updateLocalStorage = () => {
     localStorage.setItem('tasks', JSON.stringify(tasks))
+}
+
+const doesTaskShow = (task) => {
+    return currentFilter === "all" || task.category === currentFilter
 }
 
 
@@ -51,6 +64,7 @@ const show_all_tasks = () => {
     let inprogress_s= '';
     let done_s = "";
     tasks.forEach((item, index) => {
+        if (!doesTaskShow(item)) { return }
         const taskHTML = show_task(item, index)
         if (item.stage === Stage.NotDone) {
             notdone_s += taskHTML
@@ -120,12 +134,12 @@ const edit_task = (index) => {
 
 const cancel_edit = () => {
     add_button.classList.remove("invisible")
-    document.querySelector(".ok_button").remove();
-    document.querySelector(".cancel_button").remove();
+    document.querySelector(".ok_button").remove()
+    document.querySelector(".cancel_button").remove()
 
-    document.querySelector(".task-title").value = '';
-    document.querySelector(".categ").value = Category.other;
-    document.querySelector(".prior").value = Priority.low;
+    document.querySelector(".task-title").value = ''
+    document.querySelector(".categ").value = Category.other
+    document.querySelector(".prior").value = Priority.low
 
     div_buttons.classList.remove("all_wide")
 }
@@ -135,11 +149,11 @@ const ok_edit = (index) => {
     const categories_value = document.querySelector(".categ").value
     const priorities_value = document.querySelector(".prior").value
     if (task_value == "") {
-        alert("Empty task name");
+        alert("Empty task name")
         return;
     }
     if (task_value == "") {
-        alert("Empty task name");
+        alert("Empty task name")
         return;
     }
     // фикс бага: раньше нельзя было закрыть окно редактирования у удалённой таски
@@ -166,80 +180,105 @@ const set_task_values = (index, new_name, new_category, new_priority) => {
 
 // drag and drop (ужас)
 const addDragAndDropListeners = () => {
-    const tasks = document.querySelectorAll('.task');
+    const tasks = document.querySelectorAll('.task')
     const columns = document.querySelectorAll('.notdone-list, .inprogress-list, .done-list')
 
     tasks.forEach(task => {
-        task.addEventListener('dragstart', handleDragStart);
-        task.addEventListener('dragend', handleDragEnd);
+        task.addEventListener('dragstart', handleDragStart)
+        task.addEventListener('dragend', handleDragEnd)
     })
 
     columns.forEach(column => {
-        column.addEventListener('dragover', handleDragOver);
-        column.addEventListener('dragenter', handleDragEnter);
-        column.addEventListener('dragleave', handleDragLeave);
-        column.addEventListener('drop', handleDrop);
+        column.addEventListener('dragover', handleDragOver)
+        column.addEventListener('dragenter', handleDragEnter)
+        column.addEventListener('dragleave', handleDragLeave)
+        column.addEventListener('drop', handleDrop)
     })
 }
 
 const handleDragStart = (e) => {
-    draggedTaskElement = e.target.closest('.task');
-    draggedTaskIndex = parseInt(draggedTaskElement.getAttribute('data-index'));
-    draggedTaskElement.classList.add('dragging');
+    draggedTaskElement = e.target.closest('.task')
+    draggedTaskIndex = parseInt(draggedTaskElement.getAttribute('data-index'))
+    draggedTaskElement.classList.add('dragging')
 }
 
 const handleDragEnd = (e) => {
-    draggedTaskElement.classList.remove('dragging');
-    draggedTaskElement = null;
-    draggedTaskIndex = null;
+    draggedTaskElement.classList.remove('dragging')
+    draggedTaskElement = null
+    draggedTaskIndex = null
 }
 
 const handleDragOver = (e) => {
-    e.preventDefault();
+    e.preventDefault()
 }
 
 const handleDragEnter = (e) => {
     e.preventDefault();
-    const column = e.target.closest('.notdone-list, .inprogress-list, .done-list');
+    const column = e.target.closest('.notdone-list, .inprogress-list, .done-list')
     if (column) {
-        column.classList.add('drag-over');
+        column.classList.add('drag-over')
     }
 }
 
 const handleDragLeave = (e) => {
     e.preventDefault();
-    const column = e.target.closest('.notdone-list, .inprogress-list, .done-list');
-    const rect = column.getBoundingClientRect();
-    const x = e.clientX;
-    const y = e.clientY;
+    const column = e.target.closest('.notdone-list, .inprogress-list, .done-list')
+    const rect = column.getBoundingClientRect()
+    const x = e.clientX
+    const y = e.clientY
     // чтобы пофиксить сброс выделения при наведение на внутренние объекты
     if (x <= rect.left || x >= rect.right || y <= rect.top || y >= rect.bottom) {
-        column.classList.remove('drag-over');
+        column.classList.remove('drag-over')
     }
 }
 
 const handleDrop = (e) => {
     e.preventDefault();
-    const column = e.target.closest('.notdone-list, .inprogress-list, .done-list');
-    if (!column) return;
+    const column = e.target.closest('.notdone-list, .inprogress-list, .done-list')
+    if (!column) return
     const columns = document.querySelectorAll('.notdone-list, .inprogress-list, .done-list')
     columns.forEach(column => {
         column.classList.remove("drag-over")
-    });
+    })
 
     let newStage;
     if (column.classList.contains('notdone-list')) {
-        newStage = Stage.NotDone;
+        newStage = Stage.NotDone
     } else if (column.classList.contains('inprogress-list')) {
-        newStage = Stage.InProgress;
+        newStage = Stage.InProgress
     } else if (column.classList.contains('done-list')) {
-        newStage = Stage.Done;
+        newStage = Stage.Done
     }
 
     if (tasks[draggedTaskIndex].stage !== newStage) {
-        tasks[draggedTaskIndex].stage = newStage;
-        show_all_tasks();
+        tasks[draggedTaskIndex].stage = newStage
+        show_all_tasks()
     }
 }
+
+all_filter.addEventListener("click", () => {
+    currentFilter = "all"
+    show_all_tasks()
+})
+
+work_fiter.addEventListener("click", () => {
+    currentFilter = Category.work
+    show_all_tasks()
+})
+
+home_filter.addEventListener("click", () => {
+    currentFilter = Category.home
+    show_all_tasks()
+})
+
+study_filter.addEventListener("click", () => {
+    currentFilter = Category.study
+    show_all_tasks()
+})
+
+other_filter.addEventListener("click", () => {
+    currentFilter = Category.other
+    show_all_tasks()
+})
 
 show_all_tasks()

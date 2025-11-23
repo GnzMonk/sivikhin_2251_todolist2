@@ -256,3 +256,36 @@
 .cancel_button {
     border-bottom-right-radius: 35px;
 }
+
+.filter_zone {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 25px;
+    height: 70px;
+    margin-top: 20px;
+    width: 50%;
+    background-color: rgb(169, 169, 169);
+}
+
+.filter {
+    height: 70%;
+    margin-top: auto;
+    margin-bottom: auto;
+    width: 17%;
+    border-style: none;
+    border-radius: 20px;
+    background-color: rgb(212, 212, 212);
+    font-size: 26px;
+    font-weight: 600;
+}
+
+.filter:hover {
+    background-color: rgb(149, 148, 148);
+}
+
+.filter:active {
+    background-color: rgb(73, 73, 73);
+}
