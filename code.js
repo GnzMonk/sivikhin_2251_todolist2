@@ -2,7 +2,9 @@ const add_button = document.querySelector(".add-button")
 const ok_button = document.querySelector(".ok_button")
 const cancel_button = document.querySelector(".cancel_button")
 
-const tasks_list = document.querySelector(".notdone-list")
+const notdone_list = document.querySelector(".notdone-list")
+const inprogress_list = document.querySelector(".inprogress-list")
+const done_list = document.querySelector(".done-list")
 
 // Что-то в духе Enum`а
 const Stage = { NotDone: "notdone", InProgress: "inprogress", Done: "done" }
@@ -11,6 +13,8 @@ const Priority = { low: "low", medium: "medium", high: "high" }
 
 
 let tasks = [];
+let draggedTaskIndex = null;
+let draggedTaskElement = null;
 
 //!localStorage.tasks ? tasks = [] : tasks = JSON.parse(localStorage.getItem('tasks'))
 
@@ -38,11 +42,24 @@ add_button.addEventListener("click", () => {
 });
 
 const show_all_tasks = () => {
-    let s = '';
-    tasks.map((item, index) => {
-        s += show_task(item, index)
+    let notdone_s = '';
+    let inprogress_s= '';
+    let done_s = "";
+    tasks.forEach((item, index) => {
+        const taskHTML = show_task(item, index)
+        if (item.stage === Stage.NotDone) {
+            notdone_s += taskHTML
+        } else if (item.stage === Stage.InProgress) {
+            inprogress_s += taskHTML
+        } else if (item.stage === Stage.Done) {
+            done_s += taskHTML
+        }
     });
-    tasks_list.innerHTML = s;
+    notdone_list.innerHTML = notdone_s;
+    inprogress_list.innerHTML = inprogress_s;
+    done_list.innerHTML = done_s;
+
+    addDragAndDropListeners();
     updateLocalStorage()
 }
 
@@ -53,7 +70,7 @@ const del_task = (index) => {
 
 const show_task = (task, index) => {
     return `
-    <div class="task">
+    <div class="task" draggable="true" data-index="${index}">
         <div class="info">
             <div class="top_info">
                <p>${task.name}</p>
@@ -130,6 +147,82 @@ const set_task_values = (index, new_name, new_category, new_priority) => {
     tasks = new_tasks
 }
 
+// drag and drop (ужас)
+const addDragAndDropListeners = () => {
+    const tasks = document.querySelectorAll('.task');
+    const columns = document.querySelectorAll('.notdone-list, .inprogress-list, .done-list')
 
+    tasks.forEach(task => {
+        task.addEventListener('dragstart', handleDragStart);
+        task.addEventListener('dragend', handleDragEnd);
+    })
+
+    columns.forEach(column => {
+        column.addEventListener('dragover', handleDragOver);
+        column.addEventListener('dragenter', handleDragEnter);
+        column.addEventListener('dragleave', handleDragLeave);
+        column.addEventListener('drop', handleDrop);
+    })
+}
+
+const handleDragStart = (e) => {
+    draggedTaskElement = e.target.closest('.task');
+    draggedTaskIndex = parseInt(draggedTaskElement.getAttribute('data-index'));
+    draggedTaskElement.classList.add('dragging');
+}
+
+const handleDragEnd = (e) => {
+    draggedTaskElement.classList.remove('dragging');
+    draggedTaskElement = null;
+    draggedTaskIndex = null;
+}
+
+const handleDragOver = (e) => {
+    e.preventDefault();
+}
+
+const handleDragEnter = (e) => {
+    e.preventDefault();
+    const column = e.target.closest('.notdone-list, .inprogress-list, .done-list');
+    if (column) {
+        column.classList.add('drag-over');
+    }
+}
+
+const handleDragLeave = (e) => {
+    e.preventDefault();
+    const column = e.target.closest('.notdone-list, .inprogress-list, .done-list');
+    const rect = column.getBoundingClientRect();
+    const x = e.clientX;
+    const y = e.clientY;
+    // чтобы пофиксить сброс выделения при наведение на внутренние объекты
+    if (x <= rect.left || x >= rect.right || y <= rect.top || y >= rect.bottom) {
+        column.classList.remove('drag-over');
+    }
+}
+
+const handleDrop = (e) => {
+    e.preventDefault();
+    const column = e.target.closest('.notdone-list, .inprogress-list, .done-list');
+    if (!column) return;
+    const columns = document.querySelectorAll('.notdone-list, .inprogress-list, .done-list')
+    columns.forEach(column => {
+        column.classList.remove("drag-over")
+    });
+
+    let newStage;
+    if (column.classList.contains('notdone-list')) {
+        newStage = Stage.NotDone;
+    } else if (column.classList.contains('inprogress-list')) {
+        newStage = Stage.InProgress;
+    } else if (column.classList.contains('done-list')) {
+        newStage = Stage.Done;
+    }
+
+    if (tasks[draggedTaskIndex].stage !== newStage) {
+        tasks[draggedTaskIndex].stage = newStage;
+        show_all_tasks();
+    }
+}
 
 show_all_tasks()

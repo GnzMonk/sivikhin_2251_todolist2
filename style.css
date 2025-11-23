@@ -134,6 +134,7 @@
     background-color: rgb(139, 139, 139);
     display: flex;
     flex-direction: row;
+    cursor: move;
 }
 
 .info {
@@ -192,3 +193,27 @@
 .invisible {
     display: none;
 }
+
+.dragging {
+    border: 4px solid rgb(82, 82, 82);
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+}
+
+.drag-over {
+    border: 5px dotted rgb(82, 82, 82);
+    border-bottom-right-radius: 50px;
+    border-bottom-left-radius: 50px;
+}
+
+.notdone-list {
+    height: 100%;
+}
+
+.inprogress-list {
+    height: 100%;
+}
+
+.done-list {
+    height: 100%;
+}
+
