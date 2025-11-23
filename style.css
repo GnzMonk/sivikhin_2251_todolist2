@@ -123,3 +123,68 @@
     border-style: none;
     width: 110px;
 }
+
+.task {
+    width: 90%;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 15px;
+    height: 80px;
+    border-radius: 25px;
+    background-color: rgb(139, 139, 139);
+    display: flex;
+    flex-direction: row;
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+    width: 75%;
+}
+
+.top_info {
+    font-size: 30px;
+    margin-top: 10px;
+    margin-left: 15px;
+}
+
+.bot_info {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    width: 25%;
+}
+
+.del_button {
+    background-color: rgba(0,0,0,0);
+    border-style: none;
+    transform: scale(1.4);
+}
+
+.del_button svg {
+    fill: black;
+}
+
+.del_button svg:hover {
+    fill: white;
+}
+
+.edit_button {
+    background-color: rgba(0,0,0,0);
+    border-style: none;
+    transform: scale(1.4);
+}
+
+.edit_button svg {
+    fill: black;
+}
+
+.edit_button svg:hover {
+    fill: white;
+}
