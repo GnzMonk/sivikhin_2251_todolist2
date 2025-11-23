@@ -29,7 +29,7 @@
 
 
 .col {
-    height: 500px;
+    height: 750px;
     width: 30%;
     margin: 25px 0;
     background-color: rgb(169, 169, 169);
@@ -62,6 +62,7 @@
     border-style: none;
     margin-top: 20px;
     margin-left: 25px;
+    padding-left: 10px;
 }
 
 .top-creating {
@@ -217,3 +218,41 @@
     height: 100%;
 }
 
+.ok_cancel_buttons {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4%;
+}
+
+.ok_cancel_buttons button {
+    height: 33%;
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+    border-style: none;
+    background-color: rgb(57, 57, 57);
+    font-size: 16px;
+    font-weight: 700;
+    color: rgb(158, 158, 158);
+}
+
+.ok_cancel_buttons button:hover {
+    background-color: rgb(71, 70, 70);
+}
+
+.ok_cancel_buttons button:active {
+    background-color: rgb(85, 85, 85);
+}
+
+.all_wide {
+    width: 100%;
+}
+
+.ok_button {
+    border-top-right-radius: 35px;
+}
+
+.cancel_button {
+    border-bottom-right-radius: 35px;
+}

@@ -12,9 +12,10 @@ const Category = { home: "home", study: "study", work: "work", other: "other" }
 const Priority = { low: "low", medium: "medium", high: "high" }
 
 
-let tasks = [];
-let draggedTaskIndex = null;
-let draggedTaskElement = null;
+let tasks = []
+let draggedTaskIndex = null
+let draggedTaskElement = null
+let editingTask = null
 
 //!localStorage.tasks ? tasks = [] : tasks = JSON.parse(localStorage.getItem('tasks'))
 
@@ -30,6 +31,10 @@ add_button.addEventListener("click", () => {
     if (task_value == "") {
         alert("Empty task name");
         return;
+    }
+    if (task_value.length > 20) {
+        alert("Title size mustn`t be bigger than 20")
+        return
     }
     let new_task = {
         "name": task_value,
@@ -98,6 +103,8 @@ const show_task = (task, index) => {
 }
 
 const edit_task = (index) => {
+    editingTask = tasks[index]
+
     document.querySelector(".task-title").value = tasks[index].name
     document.querySelector(".categ").value = tasks[index].category
     document.querySelector(".prior").value = tasks[index].priority
@@ -108,6 +115,7 @@ const edit_task = (index) => {
     <button class="ok_button" onclick="ok_edit(${index})">ok</button>
     <button class="cancel_button" onclick="cancel_edit()">cancel</button>
     `
+    div_buttons.classList.add("all_wide")
 }
 
 const cancel_edit = () => {
@@ -118,6 +126,8 @@ const cancel_edit = () => {
     document.querySelector(".task-title").value = '';
     document.querySelector(".categ").value = Category.other;
     document.querySelector(".prior").value = Priority.low;
+
+    div_buttons.classList.remove("all_wide")
 }
 
 const ok_edit = (index) => {
@@ -128,7 +138,14 @@ const ok_edit = (index) => {
         alert("Empty task name");
         return;
     }
-    set_task_values(index, task_value, categories_value, priorities_value)
+    if (task_value == "") {
+        alert("Empty task name");
+        return;
+    }
+    // фикс бага: раньше нельзя было закрыть окно редактирования у удалённой таски
+    if (tasks[index] == editingTask) {
+        set_task_values(index, task_value, categories_value, priorities_value)
+    }
     cancel_edit()
     show_all_tasks()
 }
