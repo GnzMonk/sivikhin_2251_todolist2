@@ -45,8 +45,8 @@ add_button.addEventListener("click", () => {
         alert("Empty task name");
         return;
     }
-    if (task_value.length > 20) {
-        alert("Title size mustn`t be bigger than 20")
+    if (task_value.length > 18) {
+        alert("Title size mustn`t be bigger than 18")
         return
     }
     let new_task = {
