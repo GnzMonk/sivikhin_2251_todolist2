@@ -1,4 +1,7 @@
 const add_button = document.querySelector(".add-button")
+const ok_button = document.querySelector(".ok_button")
+const cancel_button = document.querySelector(".cancel_button")
+
 const tasks_list = document.querySelector(".notdone-list")
 
 // Что-то в духе Enum`а
@@ -81,6 +84,52 @@ const edit_task = (index) => {
     document.querySelector(".task-title").value = tasks[index].name
     document.querySelector(".categ").value = tasks[index].category
     document.querySelector(".prior").value = tasks[index].priority
+    add_button.classList.add("invisible")
+    div_buttons = document.querySelector(".ok_cancel_buttons")
 
-    
+    div_buttons.innerHTML = `
+    <button class="ok_button" onclick="ok_edit(${index})">ok</button>
+    <button class="cancel_button" onclick="cancel_edit()">cancel</button>
+    `
 }
+
+const cancel_edit = () => {
+    add_button.classList.remove("invisible")
+    document.querySelector(".ok_button").remove();
+    document.querySelector(".cancel_button").remove();
+
+    document.querySelector(".task-title").value = '';
+    document.querySelector(".categ").value = Category.other;
+    document.querySelector(".prior").value = Priority.low;
+}
+
+const ok_edit = (index) => {
+    const task_value = document.querySelector(".task-title").value
+    const categories_value = document.querySelector(".categ").value
+    const priorities_value = document.querySelector(".prior").value
+    if (task_value == "") {
+        alert("Empty task name");
+        return;
+    }
+    set_task_values(index, task_value, categories_value, priorities_value)
+    cancel_edit()
+    show_all_tasks()
+}
+
+const set_task_values = (index, new_name, new_category, new_priority) => {
+    let new_tasks = [
+        ...tasks.slice(0, index),
+        {
+            "name": new_name,
+            "stage": tasks[index].stage,
+            "category": new_category,
+            "priority": new_priority
+        },
+        ...tasks.slice(index + 1)
+    ]
+    tasks = new_tasks
+}
+
+
+
+show_all_tasks()

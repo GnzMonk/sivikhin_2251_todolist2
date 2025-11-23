@@ -188,3 +188,7 @@
 .edit_button svg:hover {
     fill: white;
 }
+
+.invisible {
+    display: none;
+}
